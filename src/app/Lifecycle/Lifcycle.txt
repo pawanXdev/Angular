@@ -1,0 +1,206 @@
+Angular Component and Directive Lifecycle Methods
+In Angular, both Components and Directives have lifecycle hooks that allow you to tap into the lifecycle of a component or directive as it is created, updated, or destroyed.
+Component Lifecycle Methods
+Angular components go through several stages, from creation, updates, and destruction. The lifecycle hooks allow you to perform custom actions at different stages of a component's life.
+Directive Lifecycle Methods
+Directives also have lifecycle hooks that allow you to control how a directive behaves during its lifecycle.
+Step-by-Step Demonstration of Angular Code: Component and Directive Lifecycle Methods
+
+1. Component Lifecycle Hooks
+Angular provides several lifecycle hooks that you can implement in a component class to track and manage its lifecycle.
+1.1 Lifecycle Hooks Available in Components
+Here are the main lifecycle hooks available for components in Angular:
+ngOnChanges(): Called when any input property of the component changes.
+ngOnInit(): Called once the component is initialized and the inputs are set.
+ngDoCheck(): Called during every change detection cycle. You can use it to implement custom change detection.
+ngAfterContentInit(): Called after content (projected content) has been initialized.
+ngAfterContentChecked(): Called after every check of content.
+ngAfterViewInit(): Called after the component's view has been initialized.
+ngAfterViewChecked(): Called after every check of the component's view.
+ngOnDestroy(): Called just before the component is destroyed.
+1.2 Example: Using Component Lifecycle Hooks
+Step 1: Create a Component and Implement Lifecycle Methods
+First, we will create a component and implement a few lifecycle methods to track its lifecycle.
+1.2.1 Generate the component:
+ng generate component lifecycle-demo
+
+lifecycle-demo.component.ts (Component Logic):
+import { Component, OnChanges, SimpleChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
+
+@Component({
+  selector: 'app-lifecycle-demo',
+  templateUrl: './lifecycle-demo.component.html',
+  styleUrls: ['./lifecycle-demo.component.css']
+})
+export class LifecycleDemoComponent implements OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy {
+  
+  count: number = 0;
+  parentMessage: string = 'Initial Parent Message';
+
+  constructor() {
+    console.log('Constructor: Component created');
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('ngOnChanges: Input properties changed', changes);
+  }
+
+  ngOnInit(): void {
+    console.log('ngOnInit: Component initialized');
+  }
+
+  ngDoCheck(): void {
+    console.log('ngDoCheck: Change detection cycle executed');
+  }
+
+  ngAfterContentInit(): void {
+    console.log('ngAfterContentInit: Content initialized');
+  }
+
+  ngAfterContentChecked(): void {
+    console.log('ngAfterContentChecked: Content checked');
+  }
+
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit: View initialized');
+  }
+
+  ngAfterViewChecked(): void {
+    console.log('ngAfterViewChecked: View checked');
+  }
+
+  ngOnDestroy(): void {
+    console.log('ngOnDestroy: Component about to be destroyed');
+  }
+
+  increment() {
+    this.count++;
+    this.parentMessage = `Updated Parent Message at count: ${this.count}`;
+  }
+}
+
+Step 2: Use the Component in the Template
+lifecycle-demo.component.html (Component Template):
+<div>
+  <h1>Angular Component Lifecycle</h1>
+  <p>Count: {{ count }}</p>
+  <p>Parent Message: {{ parentMessage }}</p>
+  
+  <button (click)="increment()">Increment Count</button>
+</div>
+
+Explanation:
+ngOnChanges: Tracks changes to input properties (parentMessage).
+ngOnInit: This is called once the component is initialized.
+ngDoCheck: Called on every change detection cycle (every time Angular checks for changes in the component).
+ngAfterContentInit: Called after content (like projected content) is initialized.
+ngAfterContentChecked: Called after Angular checks content.
+ngAfterViewInit: Called after the component's view is initialized.
+ngAfterViewChecked: Called after the component's view is checked.
+ngOnDestroy: Called when the component is about to be destroyed, often used for cleanup tasks like unsubscribing from observables.
+
+2. Directive Lifecycle Hooks
+Just like components, directives also have lifecycle hooks, but these hooks focus on changes in the element the directive is attached to.
+2.1 Lifecycle Hooks Available for Directives
+Here are the main lifecycle hooks for directives:
+ngOnChanges(): Called when any input properties of the directive change.
+ngOnInit(): Called once the directive is initialized.
+ngDoCheck(): Called during every change detection cycle.
+ngAfterContentInit(): Called after the content has been initialized.
+ngAfterContentChecked(): Called after content has been checked.
+ngAfterViewInit(): Called after the directive’s view is initialized.
+ngAfterViewChecked(): Called after the directive’s view is checked.
+ngOnDestroy(): Called just before the directive is destroyed.
+
+2.2 Example: Using Directive Lifecycle Hooks
+Let's create a custom directive and implement the lifecycle methods to track its behavior.
+Step 1: Generate a Directive
+Create a directive using Angular CLI:
+ng generate directive lifecycle-directive
+
+Step 2: Modify the Directive to Implement Lifecycle Hooks
+lifecycle-directive.directive.ts (Directive Logic):
+import { Directive, ElementRef, Renderer2, OnChanges, SimpleChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
+
+@Directive({
+  selector: '[appLifecycleDirective]'
+})
+export class LifecycleDirectiveDirective implements OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy {
+
+  constructor(private el: ElementRef, private renderer: Renderer2) {
+    console.log('Constructor: Directive created');
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('ngOnChanges: Input properties changed', changes);
+  }
+
+  ngOnInit(): void {
+    console.log('ngOnInit: Directive initialized');
+    this.renderer.setStyle(this.el.nativeElement, 'color', 'blue');
+  }
+
+  ngDoCheck(): void {
+    console.log('ngDoCheck: Change detection cycle executed');
+  }
+
+  ngAfterContentInit(): void {
+    console.log('ngAfterContentInit: Content initialized');
+  }
+
+  ngAfterContentChecked(): void {
+    console.log('ngAfterContentChecked: Content checked');
+  }
+
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit: View initialized');
+  }
+
+  ngAfterViewChecked(): void {
+    console.log('ngAfterViewChecked: View checked');
+  }
+
+  ngOnDestroy(): void {
+    console.log('ngOnDestroy: Directive about to be destroyed');
+  }
+}
+
+Step 3: Apply the Directive in a Component
+In the parent component, we will apply the custom directive.
+app.component.html (Parent Component Template):
+<div>
+  <h1>Testing Angular Directive Lifecycle</h1>
+  
+  <div appLifecycleDirective>
+    <p>This is a div with a custom directive.</p>
+  </div>
+  
+  <button (click)="destroyDirective()">Destroy Directive</button>
+</div>
+
+Step 4: Handle Directive Destruction in the Parent Component
+app.component.ts (Parent Component Logic):
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  destroyDirective() {
+    alert('Directive will be destroyed.');
+    // Logic for destroying the directive can be handled here
+  }
+}
+
+Explanation:
+Directive Lifecycle: The directive listens to the lifecycle hooks and performs tasks such as logging messages to track its initialization and destruction.
+Renderer2: In ngOnInit(), we use Angular's Renderer2 service to modify the DOM (in this case, changing the text color to blue).
+Destruction: We also handle the ngOnDestroy() lifecycle hook to perform any necessary cleanup when the directive is removed from the DOM.
+
+Conclusion
+Component Lifecycle Hooks: Angular provides various lifecycle hooks that allow you to perform custom logic during different phases of a component's existence.
+Directive Lifecycle Hooks: Directives also have lifecycle hooks, which help you manage how the directive interacts with the DOM and its attached element.
+Using lifecycle hooks, you can manage your Angular components and directives efficiently by executing tasks at the right moments during their lifetimes.
+

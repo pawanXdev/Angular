@@ -1,0 +1,8 @@
+<p>ng-class-directive works!</p>
+<div>
+  <h1>ngClass Example</h1>
+  <button (click)="isActive = !isActive">Toggle Class</button>
+  <div [ngClass]="{'active-class': isActive, 'inactive-class': !isActive}">
+    This div's class changes dynamically.
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<p>chaining-multiple-pipes works!</p>
+<div>
+  <h1>Chaining Pipes</h1>
+
+  <!-- Chaining UpperCasePipe and TitleCasePipe -->
+  <p>Chained Pipe Result: {{ message | lowercase | titleCase }}</p>
+
+  <!-- Chaining CurrencyPipe and DecimalPipe -->
+  <p>Chained Currency Pipe: {{ price | currency:'USD':true:'1.0-2' | uppercase }}</p>
+</div>
+
+
+<!-- <div>
+  <h1>Chaining Built-in and Custom Pipes</h1>
+
+  
+  <p>Chained Pipe Result: {{ message | uppercase | titleCase }}</p>
+</div> -->

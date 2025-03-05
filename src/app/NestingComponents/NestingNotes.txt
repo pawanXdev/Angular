@@ -1,0 +1,142 @@
+Nesting Components in Angular: @Input and @Output
+In Angular, components can be nested to build modular applications. Communication between parent and child components is key to making these components interact. Two key decorators that allow this communication are:
+@Input(): Property binding from the parent to the child component.
+@Output(): Event binding from the child to the parent component.
+Below is a step-by-step demonstration of how to use these decorators.
+
+Step 1: Setting Up the Project
+Assuming you already have an Angular project, let's generate two components:
+Parent Component: The component that will contain the child component.
+Child Component: The component that will receive data from the parent and send events back.
+To generate these components, run:
+ng generate component parent
+ng generate component child
+
+
+Step 2: Use @Input() for Property Binding (Parent to Child)
+The @Input() decorator allows the parent component to pass data to the child component.
+2.1 Modify the Parent Component
+parent.component.ts (Parent Component Logic):
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-parent',
+  templateUrl: './parent.component.html',
+  styleUrls: ['./parent.component.css']
+})
+export class ParentComponent {
+  parentMessage = "Hello from Parent!";
+}
+
+parent.component.html (Parent Component Template):
+<div>
+  <h1>Parent Component</h1>
+  <p>{{ parentMessage }}</p>
+
+  <!-- Passing data to the child component -->
+  <app-child [childMessage]="parentMessage"></app-child>
+</div>
+
+Explanation:
+We have a parentMessage property in the parent component that holds the string "Hello from Parent!".
+Using the @Input() decorator in the child component, we will pass this message to the child component.
+2.2 Modify the Child Component to Receive Data from Parent
+child.component.ts (Child Component Logic):
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  templateUrl: './child.component.html',
+  styleUrls: ['./child.component.css']
+})
+export class ChildComponent {
+  @Input() childMessage: string = ''; // This will receive data from parent
+}
+
+child.component.html (Child Component Template):
+<div>
+  <h2>Child Component</h2>
+  <p>{{ childMessage }}</p>
+</div>
+
+Explanation:
+@Input(): The @Input() decorator allows the child component to accept data from the parent. The childMessage property in the child component is bound to the parentMessage property from the parent component using property binding [childMessage]="parentMessage".
+
+Step 3: Use @Output() for Event Binding (Child to Parent)
+The @Output() decorator allows the child component to send data or events back to the parent component.
+3.1 Modify the Parent Component to Handle Events from the Child
+parent.component.ts (Parent Component Logic):
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-parent',
+  templateUrl: './parent.component.html',
+  styleUrls: ['./parent.component.css']
+})
+export class ParentComponent {
+  parentMessage = "Hello from Parent!";
+  receivedMessage = '';
+
+  // This method will handle the event emitted from the child
+  receiveMessage(message: string) {
+    this.receivedMessage = message;
+  }
+}
+
+parent.component.html (Parent Component Template):
+<div>
+  <h1>Parent Component</h1>
+  <p>{{ parentMessage }}</p>
+
+  <!-- Passing data to the child component -->
+  <app-child [childMessage]="parentMessage" (sendMessage)="receiveMessage($event)"></app-child>
+
+  <p>Message from Child: {{ receivedMessage }}</p>
+</div>
+
+Explanation:
+The parent component includes an event handler method receiveMessage(message: string) to receive messages from the child.
+The sendMessage event (which we'll emit from the child) is handled by receiveMessage($event), and the received message will be displayed in the parent component.
+3.2 Modify the Child Component to Emit Events to the Parent
+child.component.ts (Child Component Logic):
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  templateUrl: './child.component.html',
+  styleUrls: ['./child.component.css']
+})
+export class ChildComponent {
+  @Input() childMessage: string = ''; // Property to receive data from parent
+  @Output() sendMessage: EventEmitter<string> = new EventEmitter(); // Event emitter to send data to parent
+
+  // Method to emit a message to the parent
+  sendToParent() {
+    this.sendMessage.emit('Hello from Child!');
+  }
+}
+
+child.component.html (Child Component Template):
+<div>
+  <h2>Child Component</h2>
+  <p>{{ childMessage }}</p>
+
+  <button (click)="sendToParent()">Send Message to Parent</button>
+</div>
+
+Explanation:
+@Input(): The childMessage property is receiving the message from the parent.
+@Output(): The sendMessage property is an EventEmitter, which allows the child to send data back to the parent.
+sendToParent(): This method is called when the button is clicked. It uses this.sendMessage.emit() to send the message 'Hello from Child!' to the parent.
+
+Step 4: Running the Application
+Now, if you run the Angular application, you should see:
+The Parent Component will display "Hello from Parent!".
+The Child Component will display "Hello from Parent!" passed via the @Input() decorator.
+There will be a button in the child component labeled "Send Message to Parent". When clicked, the child component will emit an event, sending a message back to the parent component, which will display "Hello from Child!".
+
+Conclusion
+@Input(): This allows the parent component to pass data to the child component via property binding.
+@Output(): This allows the child component to send data or events back to the parent using event binding.
+EventEmitter: The EventEmitter class is used to create custom events, which can then be subscribed to in the parent component.
+This pattern of nesting components and passing data between them is foundational in Angular and is essential for building complex applications with component-based architectures. 

@@ -1,0 +1,10 @@
+<h2>Toggle Visibility and Apply Classes Dynamically</h2>
+
+<button (click)="toggleVisibility()">Toggle Visibility</button>
+<button (click)="toggleSpecial()">Toggle Special Class</button>
+
+<div *ngIf="isVisible">
+  <p [ngClass]="{ 'special-text': isSpecial }">
+    This text {{ isSpecial ? 'has' : 'does not have' }} the special class.
+  </p>
+</div>
